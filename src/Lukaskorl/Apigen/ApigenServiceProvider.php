@@ -18,7 +18,10 @@ class ApigenServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
+        $this->package('lukaskorl/apigen');
+
         // Overwrite routes of frozennode/administrator
         include __DIR__.'/../../routes.php';
     }
