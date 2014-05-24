@@ -42,6 +42,7 @@ class PublishAssetsCommand extends Command {
 
 		// Publish assets of frozennode/administrator
         $this->call('asset:publish', [ 'frozennode/administrator' ]);
+        $this->call('asset:publish', [ 'lukaskorl/apigen' ]);
 
         // Create directories for configuration files
         $this->info("Setting up backend configuration ...");

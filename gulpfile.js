@@ -11,10 +11,13 @@ var gulp = require('gulp'),
 // Compile main styles
 gulp.task('styles', function() {
     return gulp.src([
+        'src/assets/bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'src/assets/bower_components/bootstrap/dist/css/bootstrap-theme.min.css',
         'src/assets/sass/main.sass'
     ])
         .pipe(plumber())
         .pipe(sass({ style: 'expanded' }))
+        .pipe(concat('main.css'))
         .pipe(autoprefixer('last 10 version', 'safari 5', 'ie 9', 'ios 6', 'android 4'))
         .pipe(rename({ suffix: '.min' }))
         .pipe(minifycss())
@@ -68,24 +71,25 @@ gulp.task('legacy-scripts', function() {
         .pipe(gulp.dest('public/scripts'));
 });
 
-//// Compile scripts
-//gulp.task('scripts', function() {
-//    return gulp.src([
-//        'app/assets/coffee/*.coffee'
-//    ])
-//        .pipe(plumber())
-//        .pipe(coffee())
-//        .pipe(gulp.dest('public/assets/dist/scripts/core.js'));
-//});
-//
-//// Watch for changes in assets
-//gulp.task('watch', function() {
-//    gulp.watch(['app/assets/sass/**/*.sass'], ['styles'])
-//    gulp.watch([
-//        'app/assets/**/*.coffee',
-//        'app/assets/**/*.js'
-//    ], ['scripts']);
-//});
+// Compile scripts
+gulp.task('scripts', function() {
+    return gulp.src([
+        'src/assets/coffee/**/*.coffee'
+    ])
+        .pipe(plumber())
+        .pipe(coffee())
+        .pipe(concat('core.js'))
+        .pipe(gulp.dest('public/scripts'));
+});
+
+// Watch for changes in assets
+gulp.task('watch', function() {
+    gulp.watch(['src/assets/sass/**/*.sass'], ['styles'])
+    gulp.watch([
+        'src/assets/**/*.coffee',
+        'src/assets/**/*.js'
+    ], ['scripts']);
+});
 
 // Build all assets
-gulp.task('build', ['styles', 'admin-styles', 'head-scripts', 'legacy-scripts']);
+gulp.task('build', ['styles', 'admin-styles', 'head-scripts', 'legacy-scripts', 'vendor-scripts', 'scripts']);
