@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Markdown extends Field {
 
+    public static $identifier = 'markdown';
+
     protected $allowedAdminDecorators = ['title', 'limit', 'height'];
 
-    protected $admin_type = "markdown";
+    protected $adminType = "markdown";
 
-    protected $db_type = "text";
+    protected $schemaType = "text";
 
 } 

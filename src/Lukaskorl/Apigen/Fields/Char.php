@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Char extends Field {
 
+    public static $identifier = 'char';
+
     protected $allowedAdminDecorators = ['title', 'limit'];
 
-    protected $admin_type = "text";
+    protected $adminType = "text";
 
-    protected $db_type = "char";
+    protected $schemaType = "char";
 
 } 

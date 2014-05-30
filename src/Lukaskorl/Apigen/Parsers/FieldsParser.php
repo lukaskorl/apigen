@@ -1,5 +1,9 @@
 <?php namespace Lukaskorl\Apigen\Parsers;
 
+use Illuminate\Foundation\Application;
+use Lukaskorl\Apigen\Exceptions\FieldTypeNotFound;
+use Lukaskorl\Apigen\Field;
+
 /**
  * Class FieldsParser
  * Based on MigrationFieldsParser (c) Jeffrey Way
@@ -9,6 +13,33 @@
  */
 class FieldsParser {
 
+    protected static $types = [];
+    /**
+     * @var
+     */
+    private $app;
+
+    /**
+     * Register a new field type
+     *
+     * @param $className
+     * @internal param $type
+     */
+    public static function registerType($className)
+    {
+        self::$types[$className::$identifier] = $className;
+    }
+
+    /**
+     * Dependency injection
+     *
+     * @param Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Parse a string of fields, like
      * name:string, age:integer
@@ -16,7 +47,7 @@ class FieldsParser {
      * @param string $fields
      * @return array
      */
-    public static function parse($fields)
+    public function parse($fields)
     {
         if ( ! $fields) return [];
 
@@ -55,19 +86,35 @@ class FieldsParser {
             // be our decorators
             $decorators = $chunks;
 
-            $parsed[$index] = ['field' => $property, 'type' => $type];
+            $parsed[$index] = ['property' => $property, 'field' => $this->createInstanceOfField($type)];
 
             if (isset($args)) $parsed[$index]['args'] = $args;
             if ($decorators) {
-                $parsed[$index]['decorators'] = [];
-
                 foreach ($decorators as $decorator) {
-                    $parsed[$index]['decorators'] = array_merge($parsed[$index]['decorators'], DecoratorParser::parse($decorator));
+                    extract(DecoratorParser::parse($decorator));
+                    $parsed[$index]['field']->addDecorator($name, $args);
                 }
             }
         }
 
         return $parsed;
+    }
+
+    /**
+     * Instantiate a field object
+     *
+     * @param $identifier
+     * @return mixed
+     * @throws \Lukaskorl\Apigen\Exceptions\FieldTypeNotFound
+     */
+    protected function createInstanceOfField($identifier)
+    {
+        if ( ! isset(self::$types[$identifier])) {
+            throw new FieldTypeNotFound;
+        }
+
+        // Instantiate the field and return the instance
+        return $this->app->make(self::$types[$identifier]);
     }
 
 } 

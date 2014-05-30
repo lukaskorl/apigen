@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Binary extends Field {
 
+    public static $identifier = 'binary';
+
     protected $allowedAdminDecorators = ['title', 'limit', 'height'];
 
-    protected $admin_type = "textarea";
+    protected $adminType = "textarea";
 
-    protected $db_type = "binary";
+    protected $schemaType = "binary";
 
 } 

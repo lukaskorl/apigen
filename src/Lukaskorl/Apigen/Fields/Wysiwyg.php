@@ -5,8 +5,10 @@ use Lukaskorl\Apigen\Field;
 
 class Wysiwyg extends Field {
 
-    protected $admin_type = "wysiwyg";
+    public static $identifier = 'wysiwyg';
 
-    protected $db_type = "text";
+    protected $adminType = "wysiwyg";
+
+    protected $schemaType = "text";
 
 }

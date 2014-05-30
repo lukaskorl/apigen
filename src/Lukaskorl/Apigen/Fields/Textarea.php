@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Textarea extends Field {
 
+    public static $identifier = 'textarea';
+
     protected $allowedAdminDecorators = ['title', 'limit', 'height'];
 
-    protected $admin_type = "textarea";
+    protected $adminType = "textarea";
 
-    protected $db_type = "text";
+    protected $schemaType = "text";
 
 } 

@@ -43,10 +43,16 @@ class SetupAdminCommand extends Command {
      * @var \Illuminate\Filesystem\Filesystem
      */
     private $filesystem;
+
     /**
      * @var \Lukaskorl\Apigen\Templating\Generator
      */
     private $generator;
+
+    /**
+     * @var \Lukaskorl\Apigen\Parsers\FieldsParser
+     */
+    private $parser;
 
     /**
      * Create a new command instance.
@@ -57,13 +63,14 @@ class SetupAdminCommand extends Command {
      * @param \Lukaskorl\Apigen\Templating\Generator $generator
      * @return \Lukaskorl\Apigen\Artisan\SetupAdminCommand
      */
-	public function __construct(ConfigRepository $config, Translator $translator, Filesystem $filesystem, Generator $generator)
+	public function __construct(ConfigRepository $config, Translator $translator, Filesystem $filesystem, Generator $generator, FieldsParser $parser)
 	{
 		parent::__construct();
         $this->config = $config;
         $this->translator = $translator;
         $this->filesystem = $filesystem;
         $this->generator = $generator;
+        $this->parser = $parser;
     }
 
 	/**
@@ -75,7 +82,7 @@ class SetupAdminCommand extends Command {
 	{
         // Prepare input
         $name = $this->getResourceName();
-        $fields = FieldsParser::parse($this->option('fields'));
+        $fields = $this->parser->parse($this->option('fields'));
 
         // Generate the model config
         $this->info("Generating model configuration for '{$name->toReadableName()}' ...");
@@ -177,27 +184,29 @@ class SetupAdminCommand extends Command {
         // Prepare fields
         $listFields = [];
         foreach($fields as $field) {
-            $listFields[$field['field']] = [
-                'title' => $this->translator->translate($field['field'])->toReadableName()
+            $listFields[$field['property']] = [
+                'title' => $this->translator->translate($field['property'])->toReadableName()
             ];
         }
 
         // Prepare edit fields
         $editFields = [];
         foreach($fields as $field) {
-            $editFields[$field['field']] = [
-
-            ];
+            $editFields[$field['property']] = array_merge([
+                // Default values (may be overwritten by merging in edit fields configuration)
+                'title' => $this->translator->translate($field['property'])->toReadableName(),
+                'type' => $field['field']->getAdminType()
+            ], $field['field']->generateEditFieldsConfiguration());
         }
-        dd($editFields);
 
+        // Compile configuration template
         return $this->generator->compile('model_config.txt', [
             'MODEL_TITLE_SINGULAR' => $name->toReadableName(),
             'MODEL_TITLE_PLURAL' => $name->toReadablePlural(),
             'MODEL_SINGULAR' => $name->toSingularForm(),
             'MODEL_ELOQUENT' => $name->toModelName(),
-            'MODEL_LIST_COLUMNS' => [],
-            'MODEL_EDIT_FIELDS' => []
+            'MODEL_LIST_COLUMNS' => $listFields,
+            'MODEL_EDIT_FIELDS' => $editFields
         ]);
     }
 

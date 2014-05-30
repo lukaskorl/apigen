@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Date extends Field {
 
+    public static $identifier = 'date';
+
     protected $allowedAdminDecorators = ['title', 'date_format'];
 
-    protected $admin_type = "date";
+    protected $adminType = "date";
 
-    protected $db_type = "date";
+    protected $schemaType = "date";
 
 } 

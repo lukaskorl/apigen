@@ -5,8 +5,10 @@ use Lukaskorl\Apigen\Field;
 
 class Boolean extends Field {
 
-    protected $admin_type = "bool";
+    public static $identifier = 'boolean';
 
-    protected $db_type = "boolean";
+    protected $adminType = "bool";
+
+    protected $schemaType = "boolean";
 
 } 

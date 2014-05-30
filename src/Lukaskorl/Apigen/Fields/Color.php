@@ -5,8 +5,10 @@ use Lukaskorl\Apigen\Field;
 
 class Color extends Field {
 
-    protected $admin_type = "color";
+    public static $identifier = 'color';
 
-    protected $db_type = "char";
+    protected $adminType = "color";
+
+    protected $schemaType = "char";
 
 } 

@@ -6,6 +6,7 @@ use Lukaskorl\Apigen\Artisan\PublishAssetsCommand;
 use Lukaskorl\Apigen\Artisan\GenerateResourceCommand;
 use Lukaskorl\Apigen\Artisan\GenerateRepositoryCommand;
 use Lukaskorl\Apigen\Artisan\SetupAdminCommand;
+use Lukaskorl\Apigen\Parsers\FieldsParser;
 
 class ApigenServiceProvider extends ServiceProvider {
 
@@ -48,6 +49,29 @@ class ApigenServiceProvider extends ServiceProvider {
 
         // Overwrite the frozennode/administrator config
         $this->resetConfigNamespace();
+
+        // Register field types for Artisan commands
+        $this->registerFieldTypes([
+            'Lukaskorl\Apigen\Fields\Binary',
+            'Lukaskorl\Apigen\Fields\Boolean',
+            'Lukaskorl\Apigen\Fields\Char',
+            'Lukaskorl\Apigen\Fields\Color',
+            'Lukaskorl\Apigen\Fields\Date',
+            'Lukaskorl\Apigen\Fields\Datetime',
+            'Lukaskorl\Apigen\Fields\Double',
+            'Lukaskorl\Apigen\Fields\Enum',
+            'Lukaskorl\Apigen\Fields\File',
+            'Lukaskorl\Apigen\Fields\Float',
+            'Lukaskorl\Apigen\Fields\Image',
+            'Lukaskorl\Apigen\Fields\Integer',
+            'Lukaskorl\Apigen\Fields\Markdown',
+            'Lukaskorl\Apigen\Fields\Password',
+            'Lukaskorl\Apigen\Fields\String',
+            'Lukaskorl\Apigen\Fields\Text',
+            'Lukaskorl\Apigen\Fields\Textarea',
+            'Lukaskorl\Apigen\Fields\Time',
+            'Lukaskorl\Apigen\Fields\Wysiwyg'
+        ]);
 
         // Register commands
         $this->registerPublishCommand();
@@ -121,6 +145,19 @@ class ApigenServiceProvider extends ServiceProvider {
 
         // Immediately call the config and load the files
         return Config::get('administrator::administrator');
+    }
+
+    /**
+     * Register all given types
+     * @param array $classNames
+     * @return $this
+     */
+    private function registerFieldTypes(array $classNames)
+    {
+        foreach ($classNames as $className) {
+            FieldsParser::registerType($className);
+        }
+        return $this;
     }
 
 }

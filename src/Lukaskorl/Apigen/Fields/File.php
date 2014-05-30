@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class File extends Field {
 
+    public static $identifier = 'file';
+
     protected $allowedAdminDecorators = ['title', 'location', 'naming', 'length', 'size_limit', 'mimes'];
 
-    protected $admin_type = "file";
+    protected $adminType = "file";
 
-    protected $db_type = "string";
+    protected $schemaType = "string";
 
 } 

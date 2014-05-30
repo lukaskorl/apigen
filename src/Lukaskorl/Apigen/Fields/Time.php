@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Time extends Field {
 
+    public static $identifier = 'time';
+
     protected $allowedAdminDecorators = ['title', 'time_format'];
 
-    protected $admin_type = "time";
+    protected $adminType = "time";
 
-    protected $db_type = "time";
+    protected $schemaType = "time";
 
 } 

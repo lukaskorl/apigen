@@ -18,7 +18,10 @@ class DecoratorParser {
     {
         if ( ! $decorator) return [];
 
-        $parsed = [];
+        $parsed = [
+            'name' => null,
+            'args' => []
+        ];
 
         // See if args were provided, like:
         // string(10,20)
@@ -30,9 +33,10 @@ class DecoratorParser {
             $args = array_map(function($value) { return trim($value, ' \'"'); }, explode(',', $matches[2]));
 
             // Add to result
-            $parsed[$name] = $args;
+            $parsed['name'] = $name;
+            $parsed['args'] = $args;
         } else {
-            $parsed[$decorator] = null;
+            $parsed['name'] = $decorator;
         }
 
         return $parsed;

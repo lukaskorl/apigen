@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Enum extends Field {
 
+    public static $identifier = 'enum';
+
     protected $allowedAdminDecorators = ['title', 'options'];
 
-    protected $admin_type = "enum";
+    protected $adminType = "enum";
 
-    protected $db_type = "enum";
+    protected $schemaType = "enum";
 
 } 

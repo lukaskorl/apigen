@@ -5,10 +5,12 @@ use Lukaskorl\Apigen\Field;
 
 class Image extends Field {
 
+    public static $identifier = 'image';
+
     protected $allowedAdminDecorators = ['title', 'location', 'naming', 'length', 'size_limit'];
 
-    protected $admin_type = "image";
+    protected $adminType = "image";
 
-    protected $db_type = "string";
+    protected $schemaType = "string";
 
 } 

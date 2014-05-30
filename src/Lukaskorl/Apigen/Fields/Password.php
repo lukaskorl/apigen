@@ -5,8 +5,10 @@ use Lukaskorl\Apigen\Field;
 
 class Password extends Field {
 
-    protected $admin_type = "password";
+    public static $identifier = 'password';
 
-    protected $db_type = "string";
+    protected $adminType = "password";
+
+    protected $schemaType = "string";
 
 } 

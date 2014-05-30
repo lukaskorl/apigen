@@ -5,10 +5,16 @@ use Lukaskorl\Apigen\Field;
 
 class Double extends Field {
 
-    protected $allowedAdminDecorators = ['title', 'symbol', 'decimal', 'thousands_separator', 'decimal_separator'];
+    public static $identifier = 'double';
 
-    protected $admin_type = "number";
+    protected $decorators = [
+        'decimals' => 2
+    ];
 
-    protected $db_type = "double";
+    protected $allowedAdminDecorators = ['title', 'symbol', 'decimals', 'thousands_separator', 'decimal_separator'];
+
+    protected $adminType = "number";
+
+    protected $schemaType = "double";
 
 } 

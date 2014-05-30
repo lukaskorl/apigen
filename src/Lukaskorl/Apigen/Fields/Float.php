@@ -5,10 +5,16 @@ use Lukaskorl\Apigen\Field;
 
 class Float extends Field {
 
-    protected $allowedAdminDecorators = ['title', 'symbol', 'decimal', 'thousands_separator', 'decimal_separator'];
+    public static $identifier = 'float';
 
-    protected $admin_type = "number";
+    protected $decorators = [
+        'decimals' => 2
+    ];
 
-    protected $db_type = "float";
+    protected $allowedAdminDecorators = ['title', 'symbol', 'decimals', 'thousands_separator', 'decimal_separator'];
+
+    protected $adminType = "number";
+
+    protected $schemaType = "float";
 
 } 
