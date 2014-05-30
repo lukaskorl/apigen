@@ -121,7 +121,6 @@ class SetupAdminCommand extends Command {
 	{
         return [
             [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
-            [ 'title', null, InputOption::VALUE_OPTIONAL, 'Set the title used in the menu' ],
         ];
 	}
 

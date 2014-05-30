@@ -37,7 +37,27 @@ class GenerateResourceCommand extends Command {
 	 */
 	public function fire()
 	{
-		//
+        // 1. Generate migration
+        // TODO
+
+        // 2. Generate model
+        // TODO
+
+        // 3. Generate repository
+        // TODO
+
+        // 4. Generate controller
+        // TODO
+
+        // 5. Setup API route
+        if ( ! $this->option('no-route')) {
+            // TODO
+        }
+
+        // 6. Setup administration interface if needed
+        if ( ! $this->option('no-admin')) {
+            $this->setupAdministrationBackend();
+        }
 	}
 
 	/**
@@ -48,7 +68,6 @@ class GenerateResourceCommand extends Command {
 	protected function getArguments()
 	{
 		return [
-			//array('example', InputArgument::REQUIRED, 'An example argument.'),
             [ 'name', InputArgument::REQUIRED, 'Singular name of the resource' ],
         ];
 	}
@@ -61,7 +80,6 @@ class GenerateResourceCommand extends Command {
 	protected function getOptions()
 	{
 		return [
-			//array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
             [ 'no-admin', 'na', InputOption::VALUE_NONE, 'Omit the setup of the admin interface' ],
             [ 'no-route', 'nr', InputOption::VALUE_NONE, 'Omit the setup of API route' ],
             [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
@@ -71,5 +89,18 @@ class GenerateResourceCommand extends Command {
             [ 'path', null, InputOption::VALUE_OPTIONAL, 'Base path for generated code. You can set a project wide default value fot this in the config.' ],
         ];
 	}
+
+    /**
+     * Create configuration for backend
+     * @return int
+     */
+    protected function setupAdministrationBackend()
+    {
+        // Generate administration interface
+        return $this->call('apigen:admin', [
+            'name' => $this->argument('name'),
+            '--fields' => $this->option('fields')
+        ]);
+    }
 
 }
