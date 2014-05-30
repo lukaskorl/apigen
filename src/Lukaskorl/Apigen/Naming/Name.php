@@ -70,9 +70,30 @@ class Name {
      * Return a humanly readable name for the resource
      * @return string
      */
-    public function toReadable()
+    public function toReadableName()
     {
         return ucwords($this->translator->snake($this->getNormalizedName(), ' '));
+    }
+
+    /**
+     * Return the readable representation in plural form
+     * @return string
+     */
+    public function toReadablePlural()
+    {
+        return ucwords($this->translator->snake($this->translator->plural($this->getNormalizedName(), ' ')));
+    }
+
+
+    /**
+     * Return a singular form of the name
+     * @return string
+     */
+    public function toSingularForm()
+    {
+        return $this->translator->camel(
+            $this->translator->singular($this->getNormalizedName())
+        );
     }
 
     /**

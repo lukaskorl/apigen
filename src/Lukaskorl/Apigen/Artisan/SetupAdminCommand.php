@@ -5,7 +5,9 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Log\Writer;
 use Illuminate\Support\Pluralizer;
+use Lukaskorl\Apigen\Naming\Name;
 use Lukaskorl\Apigen\Naming\Translator;
+use Lukaskorl\Apigen\Templating\Generator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use App, Config;
@@ -40,6 +42,10 @@ class SetupAdminCommand extends Command {
      * @var \Illuminate\Filesystem\Filesystem
      */
     private $filesystem;
+    /**
+     * @var \Lukaskorl\Apigen\Templating\Generator
+     */
+    private $generator;
 
     /**
      * Create a new command instance.
@@ -47,14 +53,16 @@ class SetupAdminCommand extends Command {
      * @param \Illuminate\Config\Repository $config
      * @param \Lukaskorl\Apigen\Naming\Translator $translator
      * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Lukaskorl\Apigen\Templating\Generator $generator
      * @return \Lukaskorl\Apigen\Artisan\SetupAdminCommand
      */
-	public function __construct(ConfigRepository $config, Translator $translator, Filesystem $filesystem)
+	public function __construct(ConfigRepository $config, Translator $translator, Filesystem $filesystem, Generator $generator)
 	{
 		parent::__construct();
         $this->config = $config;
         $this->translator = $translator;
         $this->filesystem = $filesystem;
+        $this->generator = $generator;
     }
 
 	/**
@@ -66,12 +74,20 @@ class SetupAdminCommand extends Command {
 	{
         // Prepare input
         $name = $this->getResourceName();
-        $modelConfigPath = $this->config->get('administrator::administrator.model_config_path');
+
+        // Generate the model config
+        $this->info("Generating model configuration for '{$name->toReadableName()}' ...");
+        $modelConfig = $this->generateModelConfigFromTemplate($name);
+
+        $this->info("Saving model configuration of '{$name->toReadableName()}' to file ...");
+        $this->saveToModelConfig($name, $modelConfig);
 
         // Check if the resource is already registered in the menu
         if ( ! $this->isNameRegisteredInAdministrationMenu($name)) {
-            $this->info("Adding '{$name->toReadable()}' to administration menu ...");
+            $this->info("Adding '{$name->toReadableName()}' to administration menu ...");
             $this->addNameToAdministrationMenu($name);
+        } else {
+            $this->info("Administration menu entry for '{$name->toReadableName()}' already exists.");
         }
 	}
 
@@ -146,6 +162,37 @@ class SetupAdminCommand extends Command {
     protected function getAdministratorConfigPath()
     {
         return $this->config->getNamespaces()['apigen'] . '/administrator.php';
+    }
+
+    /**
+     * Process the template and automatically fill in the values
+     * @param $name
+     * @return mixed
+     */
+    protected function generateModelConfigFromTemplate($name)
+    {
+        return $this->generator->compile('model_config.txt', [
+            'MODEL_TITLE_SINGULAR' => $name->toReadableName(),
+            'MODEL_TITLE_PLURAL' => $name->toReadablePlural(),
+            'MODEL_SINGULAR' => $name->toSingularForm(),
+            'MODEL_ELOQUENT' => $name->toModelName(),
+            'MODEL_LIST_COLUMNS' => [],
+            'MODEL_EDIT_FIELDS' => []
+        ]);
+    }
+
+    /**
+     * Write the config for the model to file
+     * @param Name $name
+     * @param $template
+     * @return int
+     */
+    private function saveToModelConfig(Name $name, $template)
+    {
+        return $this->filesystem->put(
+            $this->config->get('administrator::administrator.model_config_path') . '/' . $name->toTableName() . '.php',
+            $template
+        );
     }
 
 }
