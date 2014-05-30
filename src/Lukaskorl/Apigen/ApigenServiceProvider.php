@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Lukaskorl\Apigen\Artisan\PublishAssetsCommand;
 use Lukaskorl\Apigen\Artisan\GenerateResourceCommand;
+use Lukaskorl\Apigen\Artisan\GenerateRepositoryCommand;
+use Lukaskorl\Apigen\Artisan\SetupAdminCommand;
 
 class ApigenServiceProvider extends ServiceProvider {
 
@@ -44,16 +46,21 @@ class ApigenServiceProvider extends ServiceProvider {
         $this->app->register('Frozennode\Administrator\AdministratorServiceProvider');
         $this->app->register('Way\Generators\GeneratorsServiceProvider');
 
+        // Overwrite the frozennode/administrator config
+        $this->resetConfigNamespace();
+
         // Register commands
         $this->registerPublishCommand();
         $this->registerResourceCommand();
+        $this->registerRepositoryCommand();
+        $this->registerAdminCommand();
 	}
 
     protected function registerPublishCommand()
     {
         $this->app['apigen.publish'] = $this->app->share(function($app)
         {
-            return new PublishAssetsCommand;
+            return $app->make('Lukaskorl\Apigen\Artisan\PublishAssetsCommand');
         });
         $this->commands('apigen.publish');
     }
@@ -62,9 +69,27 @@ class ApigenServiceProvider extends ServiceProvider {
     {
         $this->app['apigen.resource'] = $this->app->share(function($app)
         {
-            return new GenerateResourceCommand;
+            return $app->make('Lukaskorl\Apigen\Artisan\GenerateResourceCommand');
         });
         $this->commands('apigen.resource');
+    }
+
+    protected function registerRepositoryCommand()
+    {
+        $this->app['apigen.repository'] = $this->app->share(function($app)
+        {
+            return $app->make('Lukaskorl\Apigen\Artisan\GenerateRepositoryCommand');
+        });
+        $this->commands('apigen.repository');
+    }
+
+    protected function registerAdminCommand()
+    {
+        $this->app['apigen.admin'] = $this->app->share(function($app)
+        {
+            return $app->make('Lukaskorl\Apigen\Artisan\SetupAdminCommand');
+        });
+        $this->commands('apigen.admin');
     }
 
 	/**

@@ -1,4 +1,4 @@
-<?php namespace Lukaskorl/Apigen/Artisan;
+<?php namespace Lukaskorl\Apigen\Artisan;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,7 +11,7 @@ class GenerateRepositoryCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'apigen.repository';
+	protected $name = 'apigen:repository';
 
 	/**
 	 * The console command description.
