@@ -4,19 +4,19 @@
     <title>Login | {{ $title }}</title>
 @stop
 
-@section('body-class')login @stop
+@section('body-class')login t-transparent @stop
 
 @section('body')
-    {{ Form::open([ 'route' => 'admin_login_action', 'role' => 'form' ]) }}
+    {{ Form::open([ 'route' => 'admin_login_action', 'role' => 'form', 'class' => 'l-centered-box' ]) }}
         <div class="form-group">
-            {{ Form::label('mail', 'E-Mail') }}
-            {{ Form::email('mail', null, [ 'class' => 'form-control' ]) }}
+            {{ Form::label('email', 'Email Address') }}
+            {{ Form::email('email', null, [ 'class' => 'form-control' ]) }}
         </div>
         <div class="form-group">
             {{ Form::label('password', 'Password') }}
             {{ Form::password('password', [ 'class' => 'form-control' ]) }}
         </div>
-        {{ Form::submit('Login', [ 'class' => 'btn btn-default' ]) }}
+        {{ Form::submit('>', [ 'class' => 'btn btn-default btn-next' ]) }}
     {{ Form::close() }}
 @stop
 

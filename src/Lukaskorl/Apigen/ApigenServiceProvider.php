@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Lukaskorl\Apigen\Commands\PublishAssetsCommand;
+use Lukaskorl\Apigen\Artisan\PublishAssetsCommand;
+use Lukaskorl\Apigen\Artisan\GenerateResourceCommand;
 
 class ApigenServiceProvider extends ServiceProvider {
 
@@ -39,11 +40,13 @@ class ApigenServiceProvider extends ServiceProvider {
         // Overwrite the frozennode/administrator config
         $this->resetConfigNamespace();
 
-        // Register the administration interface
+        // Register the administration interface and other dependent service providers
         $this->app->register('Frozennode\Administrator\AdministratorServiceProvider');
+        $this->app->register('Way\Generators\GeneratorsServiceProvider');
 
         // Register commands
         $this->registerPublishCommand();
+        $this->registerResourceCommand();
 	}
 
     protected function registerPublishCommand()
@@ -52,8 +55,16 @@ class ApigenServiceProvider extends ServiceProvider {
         {
             return new PublishAssetsCommand;
         });
-
         $this->commands('apigen.publish');
+    }
+
+    protected function registerResourceCommand()
+    {
+        $this->app['apigen.resource'] = $this->app->share(function($app)
+        {
+            return new GenerateResourceCommand;
+        });
+        $this->commands('apigen.resource');
     }
 
 	/**

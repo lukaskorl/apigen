@@ -12,6 +12,8 @@
     @yield('head')
 
     <link rel="stylesheet" href="{{ asset('packages/lukaskorl/apigen/styles/main.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme.css') }}">
     <script src="{{ asset('packages/lukaskorl/apigen/scripts/head.js') }}"></script>
 </head>
 <body class="@yield('body-class')">

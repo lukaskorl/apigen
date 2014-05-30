@@ -1,4 +1,4 @@
-<?php namespace Lukaskorl\Apigen\Commands;
+<?php namespace Lukaskorl\Apigen\Artisan;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,6 +43,9 @@ class PublishAssetsCommand extends Command {
 		// Publish assets of frozennode/administrator
         $this->call('asset:publish', [ 'frozennode/administrator' ]);
         $this->call('asset:publish', [ 'lukaskorl/apigen' ]);
+
+        // Publishing the configuration file
+        //$this->call('config:publish', [ 'lukaskorl/apigen' ]);
 
         // Create directories for configuration files
         $this->info("Setting up backend configuration ...");
