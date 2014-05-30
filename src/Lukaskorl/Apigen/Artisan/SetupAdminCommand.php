@@ -7,6 +7,7 @@ use Illuminate\Log\Writer;
 use Illuminate\Support\Pluralizer;
 use Lukaskorl\Apigen\Naming\Name;
 use Lukaskorl\Apigen\Naming\Translator;
+use Lukaskorl\Apigen\Parsers\FieldsParser;
 use Lukaskorl\Apigen\Templating\Generator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -74,10 +75,11 @@ class SetupAdminCommand extends Command {
 	{
         // Prepare input
         $name = $this->getResourceName();
+        $fields = FieldsParser::parse($this->option('fields'));
 
         // Generate the model config
         $this->info("Generating model configuration for '{$name->toReadableName()}' ...");
-        $modelConfig = $this->generateModelConfigFromTemplate($name);
+        $modelConfig = $this->generateModelConfigFromTemplate($name, $fields);
 
         $this->info("Saving model configuration of '{$name->toReadableName()}' to file ...");
         $this->saveToModelConfig($name, $modelConfig);
@@ -111,7 +113,7 @@ class SetupAdminCommand extends Command {
 	protected function getOptions()
 	{
         return [
-            [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Fields for resource' ],
+            [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
             [ 'title', null, InputOption::VALUE_OPTIONAL, 'Set the title used in the menu' ],
         ];
 	}
@@ -167,10 +169,28 @@ class SetupAdminCommand extends Command {
     /**
      * Process the template and automatically fill in the values
      * @param $name
+     * @param $fields
      * @return mixed
      */
-    protected function generateModelConfigFromTemplate($name)
+    protected function generateModelConfigFromTemplate($name, array $fields)
     {
+        // Prepare fields
+        $listFields = [];
+        foreach($fields as $field) {
+            $listFields[$field['field']] = [
+                'title' => $this->translator->translate($field['field'])->toReadableName()
+            ];
+        }
+
+        // Prepare edit fields
+        $editFields = [];
+        foreach($fields as $field) {
+            $editFields[$field['field']] = [
+
+            ];
+        }
+        dd($editFields);
+
         return $this->generator->compile('model_config.txt', [
             'MODEL_TITLE_SINGULAR' => $name->toReadableName(),
             'MODEL_TITLE_PLURAL' => $name->toReadablePlural(),

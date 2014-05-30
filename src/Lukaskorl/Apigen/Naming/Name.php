@@ -72,7 +72,7 @@ class Name {
      */
     public function toReadableName()
     {
-        return ucwords($this->translator->snake($this->getNormalizedName(), ' '));
+        return ucwords(str_replace('_', ' ', $this->translator->snake($this->getNormalizedName(), ' ')));
     }
 
     /**

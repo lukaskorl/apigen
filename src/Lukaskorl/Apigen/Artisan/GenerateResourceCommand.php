@@ -64,7 +64,7 @@ class GenerateResourceCommand extends Command {
 			//array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
             [ 'no-admin', 'na', InputOption::VALUE_NONE, 'Omit the setup of the admin interface' ],
             [ 'no-route', 'nr', InputOption::VALUE_NONE, 'Omit the setup of API route' ],
-            [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Fields for resource' ],
+            [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
             [ 'apiversion', 'api', InputOption::VALUE_OPTIONAL, 'Versioning of the API routes', 1 ],
 
             [ 'namespace', null, InputOption::VALUE_OPTIONAL, 'Base namespace for generated code. You can set a project wide default value fot this in the config.' ],
