@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class GenerateModelCommand extends Command {
+class GenerateModelCommand extends GeneratorCommand {
 
     /**
      * The console command name.
@@ -21,16 +21,6 @@ class GenerateModelCommand extends Command {
     protected $description = 'Generate a model class';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -38,6 +28,8 @@ class GenerateModelCommand extends Command {
     public function fire()
     {
         //
+
+        dd($this->getNamespace(true));
     }
 
     /**

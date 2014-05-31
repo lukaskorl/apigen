@@ -54,10 +54,10 @@ abstract class GeneratorCommand extends Command
      * Return the namespace for generated classes
      * @return mixed|string
      */
-    protected function getNamespace()
+    protected function getNamespace($omitLeadingSlash = false)
     {
         // Take namespace from option or fallback to config
         $namespace = $this->option('namespace') ? : $this->config->get('apigen::generators.default.namespace');
-        return $this->translator->path($namespace)->toNamespace();
+        return $this->translator->path($namespace)->toNamespace($omitLeadingSlash);
     }
 }

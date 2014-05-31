@@ -17,7 +17,7 @@ class Path extends Translateable {
         }, $this->getNormalizedArray());
 
         // Join all chunks together
-        return $omitLeadingSlash?'':'\\'.implode('\\', $chunks);
+        return ($omitLeadingSlash?'':"\\").trim(implode("\\", $chunks), "\\");
     }
 
     /**
