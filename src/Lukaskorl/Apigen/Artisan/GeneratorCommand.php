@@ -5,6 +5,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
 use Lukaskorl\Apigen\Naming\Translator;
 use Lukaskorl\Apigen\Parsers\FieldsParser;
+use Lukaskorl\Apigen\Templating\Generator;
 
 abstract class GeneratorCommand extends Command
 {
@@ -22,20 +23,27 @@ abstract class GeneratorCommand extends Command
     /**
      * @var \Lukaskorl\Apigen\Parsers\FieldsParser
      */
-    private $parser;
+    protected $parser;
+
+    /**
+     * @var \Lukaskorl\Apigen\Templating\Generator
+     */
+    protected $generator;
 
     /**
      * Dependency injection
+     * @param \Lukaskorl\Apigen\Templating\Generator $generator
      * @param Repository $config
      * @param Translator $translator
      * @param \Lukaskorl\Apigen\Parsers\FieldsParser $parser
      */
-    public function __construct(Repository $config, Translator $translator, FieldsParser $parser)
+    public function __construct(Generator $generator, Repository $config, Translator $translator, FieldsParser $parser)
     {
         parent::__construct();
         $this->config = $config;
         $this->translator = $translator;
         $this->parser = $parser;
+        $this->generator = $generator;
     }
 
     /**
