@@ -1,39 +1,7 @@
 <?php namespace Lukaskorl\Apigen\Naming;
 
 
-class Name {
-
-    /**
-     * Name to be translated
-     * @var string
-     */
-    private $name;
-
-    /**
-     * Translator to use
-     * @var Translator
-     */
-    private $translator;
-
-    /**
-     * Create the object and set the name
-     * @param $name
-     */
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Set the translator to use
-     * @param Translator $translator
-     * @return $this
-     */
-    public function setTranslationDelegate(Translator $translator)
-    {
-        $this->translator = $translator;
-        return $this;
-    }
+class Name extends Translateable {
 
     /**
      * Return the corresponding name of the model
@@ -102,7 +70,7 @@ class Name {
      */
     private function getNormalizedName()
     {
-        return $this->translator->singular($this->name);
+        return $this->translator->singular($this->getNative());
     }
 
 } 

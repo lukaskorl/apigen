@@ -37,6 +37,16 @@ class Translator {
     }
 
     /**
+     * Factory method for translating paths and namespaces
+     * @param $sentence
+     * @return Path
+     */
+    public function path($sentence)
+    {
+        return (new Path($sentence))->setTranslationDelegate($this);
+    }
+
+    /**
      * Convert the given sentence to studly case
      * @param $value
      * @return string

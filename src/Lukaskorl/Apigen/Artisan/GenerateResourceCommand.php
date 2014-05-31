@@ -1,12 +1,13 @@
 <?php namespace Lukaskorl\Apigen\Artisan;
 
+use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
 use Lukaskorl\Apigen\Naming\Translator;
 use Lukaskorl\Apigen\Parsers\FieldsParser;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class GenerateResourceCommand extends Command {
+class GenerateResourceCommand extends GeneratorCommand {
 
 	/**
 	 * The console command name.
@@ -21,28 +22,6 @@ class GenerateResourceCommand extends Command {
 	 * @var string
 	 */
 	protected $description = 'Generate a complete resource including API interface, repository and admin interface';
-    /**
-     * @var \Lukaskorl\Apigen\Naming\Translator
-     */
-    private $translator;
-    /**
-     * @var \Lukaskorl\Apigen\Parsers\FieldsParser
-     */
-    private $parser;
-
-    /**
-     * Create a new command instance.
-     *
-     * @param \Lukaskorl\Apigen\Naming\Translator $translator
-     * @param \Lukaskorl\Apigen\Parsers\FieldsParser $parser
-     * @return \Lukaskorl\Apigen\Artisan\GenerateResourceCommand
-     */
-	public function __construct(Translator $translator, FieldsParser $parser)
-	{
-		parent::__construct();
-        $this->translator = $translator;
-        $this->parser = $parser;
-    }
 
 	/**
 	 * Execute the console command.
@@ -51,13 +30,21 @@ class GenerateResourceCommand extends Command {
 	 */
 	public function fire()
 	{
+        // Prepare input
+        $namespace = $this->getNamespace();
+        $path = $this->getPath($namespace);
+
         // Prepare schema fields
         $this->generateSchemaMigration();
 
         // 2. Generate model
-//        $this->call('generate:model', [
-//            'modelName' => $this->translator->translate($this->argument('name'))->toModelName()
-//        ]);
+        $this->call('apigen:model', [
+            'name' => $this->translator->translate($this->argument('name'))->toModelName(),
+            '--path' => $path,
+            '--namespace' => $namespace
+        ]);
+
+        die("FUSE");
 
         // 3. Generate repository
         // TODO

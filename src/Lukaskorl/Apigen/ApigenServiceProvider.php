@@ -77,6 +77,7 @@ class ApigenServiceProvider extends ServiceProvider {
         $this->registerPublishCommand();
         $this->registerResourceCommand();
         $this->registerRepositoryCommand();
+        $this->registerModelCommand();
         $this->registerAdminCommand();
 	}
 
@@ -105,6 +106,15 @@ class ApigenServiceProvider extends ServiceProvider {
             return $app->make('Lukaskorl\Apigen\Artisan\GenerateRepositoryCommand');
         });
         $this->commands('apigen.repository');
+    }
+
+    protected function registerModelCommand()
+    {
+        $this->app['apigen.model'] = $this->app->share(function($app)
+        {
+            return $app->make('Lukaskorl\Apigen\Artisan\GenerateModelCommand');
+        });
+        $this->commands('apigen.model');
     }
 
     protected function registerAdminCommand()
