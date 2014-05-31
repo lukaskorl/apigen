@@ -96,7 +96,7 @@ class SetupAdminCommand extends Command {
             $this->info("Adding '{$name->toReadableName()}' to administration menu ...");
             $this->addNameToAdministrationMenu($name);
         } else {
-            $this->info("Administration menu entry for '{$name->toReadableName()}' already exists.");
+            $this->error("Administration menu entry for '{$name->toReadableName()}' already exists.");
         }
 	}
 

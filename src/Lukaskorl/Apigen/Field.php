@@ -7,9 +7,11 @@ abstract class Field {
 
     protected $decorators = [];
 
+    protected $arguments = [];
+
     protected $allowedAdminDecorators = ['title'];
 
-    protected $allowedDatabaseDecorators = [];
+    protected $allowedDatabaseDecorators = ['nullable', 'default', 'unique'];
 
     protected $adminType = null;
 
@@ -66,13 +68,52 @@ abstract class Field {
         // Iterate over the allowed decorators and see if there is a decorator applied
         foreach ($this->allowedAdminDecorators as $name) {
             // Check if there is a decorator applied for this name
-            if ($arugments = $this->getDecorator($name)) {
+            if ($arguments = $this->getDecorator($name)) {
                 // Apply this decorator to the configuration
-                $editField[$name] = $arugments;
+                $editField[$name] = $arguments;
             }
         }
 
         return $editField;
+    }
+
+    /**
+     * Generate schema definition string of the field (This string can be used by Jeffrey Way's Laravel Generator)
+     * @return string
+     */
+    public function toSchemaDefinition()
+    {
+        // Begin with the field's type
+        $definition = $this->schemaType;
+
+        // Append arguments of there are any
+        $args = $this->getArguments();
+        if (is_array($args) && count($args) > 0) {
+            // Preprocess arguments
+            foreach ($args as $index => $value) {
+                $decoratorArgs[$index] = var_export($value, true);
+            }
+            $definition .= "(".implode(',', $args).")";
+        }
+
+        // Append decorators
+        foreach ($this->decorators as $decoratorName => $decoratorArgs) {
+            // Only append decorators which are suitable for the schema creation
+            if (in_array($decoratorName, $this->allowedDatabaseDecorators)) {
+                $definition .= ":".$decoratorName;
+
+                // Append arguments if necessary
+                if (is_array($decoratorArgs) && count($decoratorArgs) > 0) {
+                    // Preprocess arguments
+                    foreach ($decoratorArgs as $index => $value) {
+                        $decoratorArgs[$index] = var_export($value, true);
+                    }
+                    $definition .= "(".implode(',', $decoratorArgs).")";
+                }
+            }
+        }
+
+        return $definition;
     }
 
     /**
@@ -93,6 +134,24 @@ abstract class Field {
     public function getSchemaType()
     {
         return $this->schemaType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param array $arguments
+     * @return $this
+     */
+    public function setArguments($arguments)
+    {
+        $this->arguments = $arguments;
+        return $this;
     }
 
 } 

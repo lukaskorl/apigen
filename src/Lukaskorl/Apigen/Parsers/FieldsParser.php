@@ -88,7 +88,7 @@ class FieldsParser {
 
             $parsed[$index] = ['property' => $property, 'field' => $this->createInstanceOfField($type)];
 
-            if (isset($args)) $parsed[$index]['args'] = $args;
+            if (isset($args)) $parsed[$index]['field']->setArguments($args);
             if ($decorators) {
                 foreach ($decorators as $decorator) {
                     extract(DecoratorParser::parse($decorator));
