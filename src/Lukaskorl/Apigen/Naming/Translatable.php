@@ -1,7 +1,7 @@
 <?php namespace Lukaskorl\Apigen\Naming;
 
 
-abstract class Translateable {
+abstract class Translatable {
 
     use TranslationDelegate;
 

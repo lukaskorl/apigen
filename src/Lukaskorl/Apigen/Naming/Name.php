@@ -1,7 +1,7 @@
 <?php namespace Lukaskorl\Apigen\Naming;
 
 
-class Name extends Translateable {
+class Name extends Translatable {
 
     /**
      * Return the corresponding name of the model

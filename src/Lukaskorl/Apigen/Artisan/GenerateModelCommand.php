@@ -27,9 +27,29 @@ class GenerateModelCommand extends GeneratorCommand {
      */
     public function fire()
     {
-        //
+        // Compile the given template
+        $translatableName = $this->translator->translate($this->argument('name'));
+        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $path = $this->getPath($namespace);
+        $target = "$path/{$translatableName->toModelName()}.php";
 
-        dd($this->getNamespace(true));
+        // Check if the model file already exists
+        if ($this->filesystem->exists($target)) {
+            $this->error("Model '{$translatableName->toReadablePlural()}' already exists.");
+            return;
+        }
+        $this->info("Creating '{$translatableName->toReadablePlural()}' model ...");
+
+        // Render the template
+        $template = $this->generator->compile('model_class.txt', [
+            'NAMESPACE' => $namespace,
+            'CLASSNAME' => $translatableName->toModelName(),
+            'TABLE' => $translatableName->toTableName()
+        ], false);
+
+        // Save to filesystem
+        $this->filesystem->makeDirectory($path, 0777, true);
+        $this->filesystem->put($target, $template);
     }
 
     /**

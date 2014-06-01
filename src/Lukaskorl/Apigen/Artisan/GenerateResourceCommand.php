@@ -32,7 +32,7 @@ class GenerateResourceCommand extends GeneratorCommand {
 	{
         // Prepare input
         $namespace = $this->getNamespace();
-        $path = $this->getPath($namespace);
+        $path = $this->getPath();
 
         // Prepare schema fields
         $this->generateSchemaMigration();

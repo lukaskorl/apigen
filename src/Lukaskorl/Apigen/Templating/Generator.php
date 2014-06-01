@@ -21,11 +21,11 @@ class Generator {
         $this->filesystem = $filesystem;
     }
 
-    public function compile($templateName, $data)
+    public function compile($templateName, $data, $escape = true)
     {
         $template = $this->filesystem->get($this->getTemplatePath($templateName));
 
-        return $this->renderer->compile($template, $data);
+        return $this->renderer->compile($template, $data, $escape);
     }
 
     /**

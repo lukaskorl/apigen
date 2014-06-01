@@ -1,7 +1,7 @@
 <?php namespace Lukaskorl\Apigen\Naming;
 
 
-class Path extends Translateable {
+class Path extends Translatable {
 
     /**
      * Translate to a namespace

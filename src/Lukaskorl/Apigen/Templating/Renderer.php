@@ -10,11 +10,11 @@ class Renderer {
      * @param $data
      * @return mixed
      */
-    public function compile($template, $data)
+    public function compile($template, $data, $escape = true)
     {
         foreach($data as $key => $value)
         {
-            $template = preg_replace("/\\#$key\\#/i", var_export($value, true), $template);
+            $template = preg_replace("/\\#$key\\#/i", $escape?var_export($value, true):$value, $template);
         }
 
         return $template;
