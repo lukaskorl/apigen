@@ -13,6 +13,15 @@ class Name extends Translatable {
     }
 
     /**
+     * Return the plural form of the model name
+     * @return string
+     */
+    public function toRepositoryName()
+    {
+        return $this->translator->plural($this->toModelName());
+    }
+
+    /**
      * Generate the table name for this resource
      * @return string
      */

@@ -1,0 +1,15 @@
+<?php namespace #NAMESPACE#;
+
+use Lukaskorl\Repository\Transformable\Transformer;
+
+class #CLASSNAME# extends Transformer {
+
+    protected $definitions = [
+        // Map attribute names to types here
+    ];
+
+    protected $aliases = [
+        // Map attribute names to aliases here
+    ];
+
+}

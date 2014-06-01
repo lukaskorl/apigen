@@ -27,7 +27,7 @@ class GenerateModelCommand extends GeneratorCommand {
      */
     public function fire()
     {
-        // Compile the given template
+        // Prepare input
         $translatableName = $this->translator->translate($this->argument('name'));
         $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
         $path = $this->getPath($namespace);

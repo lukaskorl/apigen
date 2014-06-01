@@ -1,0 +1,7 @@
+<?php namespace #NAMESPACE#;
+
+use Lukaskorl\Repository\Repository;
+
+interface #CLASSNAME# extends Repository {
+
+}

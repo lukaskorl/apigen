@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class GenerateRepositoryCommand extends Command {
+class GenerateRepositoryCommand extends GeneratorCommand {
 
 	/**
 	 * The console command name.
@@ -18,17 +18,7 @@ class GenerateRepositoryCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description.';
-
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+	protected $description = 'Generate an easily extensible CRUD repository for a given model';
 
 	/**
 	 * Execute the console command.
@@ -37,7 +27,34 @@ class GenerateRepositoryCommand extends Command {
 	 */
 	public function fire()
 	{
-		//
+        // Prepare input
+        $translatableName = $this->translator->translate($this->argument('name'));
+        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $path = $this->getPath($namespace);
+        $interfaceTarget = "$path/{$translatableName->toRepositoryName()}Repository.php";
+        $eloquentTarget = "$path/Eloquent{$translatableName->toRepositoryName()}Repository.php";
+        $transformerTarget = "$path/{$translatableName->toModelName()}Transformer.php";
+
+        // Render and create interface for repository
+        $this->renderTemplate('repository_interface.txt', $interfaceTarget, [
+            'NAMESPACE' => $namespace,
+            'CLASSNAME' => "{$translatableName->toRepositoryName()}Repository"
+        ]);
+
+        // Render and create transformer for repository
+        $this->renderTemplate('repository_transformer.txt', $transformerTarget, [
+            'NAMESPACE' => $namespace,
+            'CLASSNAME' => "{$translatableName->toModelName()}Transformer"
+        ]);
+
+        // Render and create repository
+        $this->renderTemplate('repository_eloquent.txt', $eloquentTarget, [
+            'NAMESPACE' => $namespace,
+            'CLASSNAME' => "Eloquent{$translatableName->toRepositoryName()}Repository",
+            'REPOSITORY' => "{$translatableName->toRepositoryName()}Repository",
+            'TRANSFORMER' => "{$translatableName->toModelName()}Transformer",
+            'MODEL' => $translatableName->toModelName()
+        ]);
 	}
 
 	/**
@@ -48,7 +65,7 @@ class GenerateRepositoryCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('name', InputArgument::REQUIRED, 'Name of the corresponding model'),
 		);
 	}
 
@@ -60,8 +77,34 @@ class GenerateRepositoryCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+            array('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace of the generated repository', null),
+            array('path', null, InputOption::VALUE_OPTIONAL, 'PSR-0 target path of the generated file', null),
 		);
 	}
+
+    /**
+     * @param $template
+     * @param $path
+     * @param $data
+     * @return int
+     */
+    protected function renderTemplate($template, $path, $data)
+    {
+        // Filter input
+        $modelName = str_replace('.php', '', pathinfo($path, PATHINFO_FILENAME));
+        // Check if the target file exists
+        if ($this->filesystem->exists($path)) {
+            $this->error("'$modelName' already exists.");
+            return;
+        }
+
+        // Create the underlaying directory
+        $this->filesystem->makeDirectory(pathinfo($path, PATHINFO_DIRNAME), 0777, true, true);
+
+        // Compile the template
+        $this->info("Creating '$modelName' ...");
+        $template = $this->generator->compile($template, $data, false);
+        return $this->filesystem->put($path, $template);
+    }
 
 }

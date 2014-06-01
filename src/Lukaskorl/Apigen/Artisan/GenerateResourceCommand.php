@@ -44,10 +44,14 @@ class GenerateResourceCommand extends GeneratorCommand {
             '--namespace' => $namespace
         ]);
 
-        die("FUSE");
-
         // 3. Generate repository
-        // TODO
+        $this->call('apigen:repository', [
+            'name' => $this->translator->translate($this->argument('name'))->toModelName(),
+            '--path' => $path,
+            '--namespace' => $namespace
+        ]);
+
+        dd("FUSE");
 
         // 4. Generate controller
         // TODO
