@@ -82,4 +82,29 @@ abstract class GeneratorCommand extends Command
 
         return $this->translator->path($namespace)->toNamespace($omitLeadingSlash);
     }
+
+    /**
+     * @param $template
+     * @param $path
+     * @param $data
+     * @return int
+     */
+    protected function renderTemplate($template, $path, $data)
+    {
+        // Filter input
+        $className = str_replace('.php', '', pathinfo($path, PATHINFO_FILENAME));
+        // Check if the target file exists
+        if ($this->filesystem->exists($path)) {
+            $this->error("'$className' already exists.");
+            return;
+        }
+
+        // Create the underlaying directory
+        $this->filesystem->makeDirectory(pathinfo($path, PATHINFO_DIRNAME), 0777, true, true);
+
+        // Compile the template
+        $this->info("Creating '$className' ...");
+        $template = $this->generator->compile($template, $data, false);
+        return $this->filesystem->put($path, $template);
+    }
 }

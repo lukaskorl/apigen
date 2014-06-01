@@ -51,10 +51,23 @@ class GenerateResourceCommand extends GeneratorCommand {
             '--namespace' => $namespace
         ]);
 
-        dd("FUSE");
 
         // 4. Generate controller
-        // TODO
+        $translatableName = $this->translator->translate($this->argument('name'));
+        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $path = $this->getPath($namespace);
+        $target = "$path/{$translatableName->toRepositoryName()}Controller.php";
+
+        // Render and create repository controller if not exists
+        if ( ! $this->filesystem->exists($target)) {
+            $this->renderTemplate('controller_class.txt', $target, [
+                'NAMESPACE' => $namespace,
+                'CLASSNAME' => "{$translatableName->toRepositoryName()}Controller",
+                'REPOSITORY' => "Eloquent{$translatableName->toRepositoryName()}Repository"
+            ]);
+        } else {
+            $this->error("Controller for repository '{$translatableName->toRepositoryName()}Repository' already exists.");
+        }
 
         // 5. Setup API route
         if ( ! $this->option('no-route')) {

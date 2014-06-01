@@ -1,0 +1,13 @@
+<?php namespace #NAMESPACE#;
+
+use #NAMESPACE#\#REPOSITORY#;
+use Lukaskorl\Repository\RepositoryController;
+
+class #CLASSNAME# extends RepositoryController {
+
+    public function __construct(#REPOSITORY# $repository)
+    {
+        $this->setRepository($repository);
+    }
+
+}
