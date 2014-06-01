@@ -35,6 +35,19 @@ class Name extends Translatable {
     }
 
     /**
+     * Get the singular form of the table name
+     * @return string
+     */
+    public function toTableSingular()
+    {
+        return $this->translator->snake(
+            $this->translator->singular(
+                $this->getNormalizedName()
+            )
+        );
+    }
+
+    /**
      * Generate the name used in the administration configuration
      * @return string
      */

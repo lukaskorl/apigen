@@ -2,8 +2,11 @@
 
 use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Routing\Router;
 use Lukaskorl\Apigen\Naming\Translator;
 use Lukaskorl\Apigen\Parsers\FieldsParser;
+use Lukaskorl\Apigen\Templating\Generator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -22,6 +25,26 @@ class GenerateResourceCommand extends GeneratorCommand {
 	 * @var string
 	 */
 	protected $description = 'Generate a complete resource including API interface, repository and admin interface';
+
+    /**
+     * @var \Illuminate\Routing\Router
+     */
+    private $router;
+
+    /**
+     * Dependency injection
+     * @param \Lukaskorl\Apigen\Artisan\Generator|\Lukaskorl\Apigen\Templating\Generator $generator
+     * @param Repository $config
+     * @param Translator $translator
+     * @param \Lukaskorl\Apigen\Parsers\FieldsParser $parser
+     * @param \Illuminate\Filesystem\Filesystem|\Lukaskorl\Apigen\Artisan\Filesystem $filesystem
+     * @param \Illuminate\Routing\Router $router
+     */
+    public function __construct(Generator $generator, Repository $config, Translator $translator, FieldsParser $parser, Filesystem $filesystem, Router $router)
+    {
+        parent::__construct($generator, $config, $translator, $parser, $filesystem);
+        $this->router = $router;
+    }
 
 	/**
 	 * Execute the console command.
@@ -60,7 +83,24 @@ class GenerateResourceCommand extends GeneratorCommand {
 
         // 5. Setup API route
         if ( ! $this->option('no-route')) {
-            // TODO
+            $resourceName = $this->translator->translate($this->argument('name'))->toTableName();
+            $repositoryName = $this->translator->translate($this->argument('name'))->toRepositoryName();
+            $routeBaseName = "api.$resourceName";
+            if ($this->router->getRoutes()->hasNamedRoute("$routeBaseName.index")) {
+                $this->error("Assuming routes for {$this->translator->translate($this->argument('name'))->toReadableName()} already exists.");
+            } else {
+                $this->info("Setting up route for '$repositoryName' ...");
+                $routeString = "\n\nRoute::resource('$resourceName', '$namespace\\{$repositoryName}Controller', [ 'names' => [ "
+                    ."\n    'index' => '$routeBaseName.index', "
+                    ."\n    'create' => '$routeBaseName.create', "
+                    ."\n    'store' => '$routeBaseName.store', "
+                    ."\n    'show' => '$routeBaseName.show', "
+                    ."\n    'edit' => '$routeBaseName.edit', "
+                    ."\n    'update' => '$routeBaseName.update', "
+                    ."\n    'destroy' => '$routeBaseName.destroy', "
+                ."\n] ]);";
+                $this->filesystem->append(app_path() . '/routes.php', $routeString);
+            }
         }
 
         // 6. Setup administration interface if needed
