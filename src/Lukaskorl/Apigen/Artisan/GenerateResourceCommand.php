@@ -35,7 +35,9 @@ class GenerateResourceCommand extends GeneratorCommand {
         $path = $this->getPath();
 
         // Prepare schema fields
-        $this->generateSchemaMigration();
+        if ( ! $this->option('no-migration')) {
+            $this->generateSchemaMigration();
+        }
 
         // 2. Generate model
         $this->call('apigen:model', [
@@ -51,22 +53,9 @@ class GenerateResourceCommand extends GeneratorCommand {
             '--namespace' => $namespace
         ]);
 
-
         // 4. Generate controller
-        $translatableName = $this->translator->translate($this->argument('name'));
-        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
-        $path = $this->getPath($namespace);
-        $target = "$path/{$translatableName->toRepositoryName()}Controller.php";
-
-        // Render and create repository controller if not exists
-        if ( ! $this->filesystem->exists($target)) {
-            $this->renderTemplate('controller_class.txt', $target, [
-                'NAMESPACE' => $namespace,
-                'CLASSNAME' => "{$translatableName->toRepositoryName()}Controller",
-                'REPOSITORY' => "Eloquent{$translatableName->toRepositoryName()}Repository"
-            ]);
-        } else {
-            $this->error("Controller for repository '{$translatableName->toRepositoryName()}Repository' already exists.");
+        if ( ! $this->option('no-controller')) {
+            $this->generateController();
         }
 
         // 5. Setup API route
@@ -102,6 +91,7 @@ class GenerateResourceCommand extends GeneratorCommand {
 		return [
             [ 'no-admin', 'na', InputOption::VALUE_NONE, 'Omit the setup of the admin interface' ],
             [ 'no-route', 'nr', InputOption::VALUE_NONE, 'Omit the setup of API route' ],
+            [ 'no-controller', 'nc', InputOption::VALUE_NONE, 'Omit the setup of API controller' ],
             [ 'no-migration', 'nm', InputOption::VALUE_NONE, 'Omit the generation of a migration file' ],
             [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
             [ 'apiversion', 'api', InputOption::VALUE_OPTIONAL, 'Versioning of the API routes', 1 ],
@@ -168,6 +158,28 @@ class GenerateResourceCommand extends GeneratorCommand {
         ]);
 
         return $this;
+    }
+
+    /**
+     * Generate the API controller
+     */
+    protected function generateController()
+    {
+        $translatableName = $this->translator->translate($this->argument('name'));
+        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $path = $this->getPath($namespace);
+        $target = "$path/{$translatableName->toRepositoryName()}Controller.php";
+
+        // Render and create repository controller if not exists
+        if (!$this->filesystem->exists($target)) {
+            $this->renderTemplate('controller_class.txt', $target, [
+                'NAMESPACE' => $namespace,
+                'CLASSNAME' => "{$translatableName->toRepositoryName()}Controller",
+                'REPOSITORY' => "Eloquent{$translatableName->toRepositoryName()}Repository"
+            ]);
+        } else {
+            $this->error("Controller for repository '{$translatableName->toRepositoryName()}Repository' already exists.");
+        }
     }
 
 }
