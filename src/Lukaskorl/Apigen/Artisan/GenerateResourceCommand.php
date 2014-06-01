@@ -90,7 +90,7 @@ class GenerateResourceCommand extends GeneratorCommand {
                 $this->error("Assuming routes for {$this->translator->translate($this->argument('name'))->toReadableName()} already exists.");
             } else {
                 $this->info("Setting up route for '$repositoryName' ...");
-                $routeString = "\n\nRoute::resource('$resourceName', '$namespace\\{$repositoryName}Controller', [ 'names' => [ "
+                $routeString = "\n\nRoute::resource('$resourceName', '$namespace\\{$repositoryName}\\{$repositoryName}Controller', [ 'names' => [ "
                     ."\n    'index' => '$routeBaseName.index', "
                     ."\n    'create' => '$routeBaseName.create', "
                     ."\n    'store' => '$routeBaseName.store', "
@@ -134,7 +134,6 @@ class GenerateResourceCommand extends GeneratorCommand {
             [ 'no-controller', 'nc', InputOption::VALUE_NONE, 'Omit the setup of API controller' ],
             [ 'no-migration', 'nm', InputOption::VALUE_NONE, 'Omit the generation of a migration file' ],
             [ 'fields', 'f', InputOption::VALUE_OPTIONAL, 'Type for resource' ],
-            [ 'apiversion', 'api', InputOption::VALUE_OPTIONAL, 'Versioning of the API routes', 1 ],
 
             [ 'namespace', null, InputOption::VALUE_OPTIONAL, 'Base namespace for generated code. You can set a project wide default value fot this in the config.' ],
             [ 'path', null, InputOption::VALUE_OPTIONAL, 'Base path for generated code. You can set a project wide default value fot this in the config.' ],

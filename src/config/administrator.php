@@ -53,7 +53,6 @@ return array(
      */
     'menu' => array(
         'users',
-        'pings',
         /*[DO NOT EDIT]#->apigen.menu.placeholder[DO NOT EDIT]*/
     ),
 
