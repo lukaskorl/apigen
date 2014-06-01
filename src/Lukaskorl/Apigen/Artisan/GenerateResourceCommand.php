@@ -82,7 +82,7 @@ class GenerateResourceCommand extends GeneratorCommand {
         }
 
         // 5. Setup API route
-        if ( ! $this->option('no-route')) {
+        if ( (! $this->option('no-route')) && (! $this->option('no-controller'))) {
             $resourceName = $this->translator->translate($this->argument('name'))->toTableName();
             $repositoryName = $this->translator->translate($this->argument('name'))->toRepositoryName();
             $routeBaseName = "api.$resourceName";
