@@ -29,16 +29,16 @@ class GenerateModelCommand extends GeneratorCommand {
     {
         // Prepare input
         $translatableName = $this->translator->translate($this->argument('name'));
-        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $namespace = $this->getNamespace(true, $translatableName->toModelName());
         $path = $this->getPath($namespace);
         $target = "$path/{$translatableName->toModelName()}.php";
 
         // Check if the model file already exists
         if ($this->filesystem->exists($target)) {
-            $this->error("Model '{$translatableName->toReadablePlural()}' already exists.");
+            $this->error("Model for '{$translatableName->toReadableName()}' already exists.");
             return;
         }
-        $this->info("Creating '{$translatableName->toReadablePlural()}' model ...");
+        $this->info("Creating model for '{$translatableName->toReadableName()}' ...");
 
         // Render the template
         $template = $this->generator->compile('model_class.txt', [

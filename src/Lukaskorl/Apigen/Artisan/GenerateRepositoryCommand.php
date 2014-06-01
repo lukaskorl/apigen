@@ -29,7 +29,7 @@ class GenerateRepositoryCommand extends GeneratorCommand {
 	{
         // Prepare input
         $translatableName = $this->translator->translate($this->argument('name'));
-        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $namespace = $this->getNamespace(true, $translatableName->toModelName());
         $path = $this->getPath($namespace);
         $interfaceTarget = "$path/{$translatableName->toRepositoryName()}Repository.php";
         $eloquentTarget = "$path/Eloquent{$translatableName->toRepositoryName()}Repository.php";

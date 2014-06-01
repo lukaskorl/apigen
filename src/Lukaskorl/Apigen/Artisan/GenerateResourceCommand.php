@@ -205,7 +205,7 @@ class GenerateResourceCommand extends GeneratorCommand {
     protected function generateController()
     {
         $translatableName = $this->translator->translate($this->argument('name'));
-        $namespace = $this->getNamespace(true, $translatableName->toReadablePlural());
+        $namespace = $this->getNamespace(true, $translatableName->toModelName());
         $path = $this->getPath($namespace);
         $target = "$path/{$translatableName->toRepositoryName()}Controller.php";
 
