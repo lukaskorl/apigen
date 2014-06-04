@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * #MODEL_TITLE_SINGULAR# model config
+ */
+
+return [
+
+    // ----- ----- ----- Required fields ------ ------ ------
+
+    /**
+     * Model title
+     * This is the title of the model used in the menu and as the model's primary title.
+     *
+     * @type string
+     */
+    'title' => #MODEL_TITLE_PLURAL#,
+
+    /**
+     * The singular name of your model
+     * This is used anywhere in Administrator where a singular name must be used. For example, the button that starts the creation of a new item is built using this. In this case it would be "New collection".
+     *
+     * @type string
+     */
+    'single' => #MODEL_SINGULAR#,
+
+    /**
+     * The class name of the Eloquent model that this config represents
+     * This must be the fully-qualified class name of your Eloquent model. If you are namespacing your models, you'll want to provide the full namespaced class name.
+     *
+     * @type string
+     */
+    'model' => #MODEL_ELOQUENT#,
+
+    /**
+     * The columns array
+     * These are the columns that will be displayed in your result set.
+     *
+     * @type array
+     */
+    'columns' => #MODEL_LIST_COLUMNS#,
+
+    /**
+     * The edit fields array
+     *
+     * @type array
+     */
+    'edit_fields' => #MODEL_EDIT_FIELDS#,
+
+    // ----- ----- ----- Optional fields ------ ------ ------
+
+];

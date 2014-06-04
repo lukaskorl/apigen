@@ -52,7 +52,8 @@ return array(
      *	)
      */
     'menu' => array(
-        'users'
+        'users',
+        /*[DO NOT EDIT]#->apigen.menu.placeholder[DO NOT EDIT]*/
     ),
 
     /**
@@ -72,14 +73,14 @@ return array(
      *
      * @type bool
      */
-    'use_dashboard' => false,
+    'use_dashboard' => true,
 
     /**
      * If you want to create a dashboard view, provide the view string here.
      *
      * @type string
      */
-    'dashboard_view' => '',
+    'dashboard_view' => 'apigen::administrator.dashboard',
 
     /**
      * The menu item that should be used as the default landing page of the administrative section

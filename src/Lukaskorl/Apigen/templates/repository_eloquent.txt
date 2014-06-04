@@ -1,0 +1,16 @@
+<?php namespace #NAMESPACE#;
+
+use #NAMESPACE#\#REPOSITORY#;
+use #NAMESPACE#\#TRANSFORMER#;
+use Lukaskorl\Repository\EloquentRepository;
+
+class #CLASSNAME# extends EloquentRepository implements #REPOSITORY# {
+
+    protected $model = '#NAMESPACE#\#MODEL#';
+
+    public function __construct(#TRANSFORMER# $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
+}

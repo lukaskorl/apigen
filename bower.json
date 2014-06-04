@@ -1,0 +1,27 @@
+{
+  "name": "APIgen",
+  "version": "0.0.0",
+  "moduleType": [
+    "amd"
+  ],
+  "authors": [
+    "@lukaskorl"
+  ],
+  "license": "MIT",
+  "homepage": "http://lukaskorl.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src/assets/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "angular-bootstrap": "~0.11.0",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2",
+    "modernizr": "~2.8.2"
+  }
+}
