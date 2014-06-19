@@ -1,15 +1,22 @@
 <?php namespace #NAMESPACE#;
 
-use Eloquent;
+use Jenssegers\Mongodb\Model as Mongodb;
 
-class #CLASSNAME# extends Eloquent {
+class #CLASSNAME# extends Mongodb {
 
     /**
-     * The database table used by the model.
+     * Database connection used for this model
      *
      * @var string
      */
-    protected $table = '#TABLE#';
+    protected $connection = 'mongodb';
+
+    /**
+     * The MongoDB collection
+     *
+     * @var string
+     */
+    protected $collection = '#COLLECTION#';
 
     /**
      * The attributes that are mass assignable.
