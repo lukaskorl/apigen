@@ -22,6 +22,15 @@ class Name extends Translatable {
     }
 
     /**
+     * Return the singular form of the model name
+     * @return string
+     */
+    public function toNamespaceName()
+    {
+        return $this->translator->singular($this->toModelName());
+    }
+
+    /**
      * Generate the table name for this resource
      * @return string
      */

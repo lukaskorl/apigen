@@ -85,12 +85,13 @@ class GenerateResourceCommand extends GeneratorCommand {
         if ( (! $this->option('no-route')) && (! $this->option('no-controller'))) {
             $resourceName = $this->translator->translate($this->argument('name'))->toTableName();
             $repositoryName = $this->translator->translate($this->argument('name'))->toRepositoryName();
+            $namespaceName = $this->translator->translate($this->argument('name'))->toNamespaceName();
             $routeBaseName = "api.$resourceName";
             if ($this->router->getRoutes()->hasNamedRoute("$routeBaseName.index")) {
                 $this->error("Assuming routes for {$this->translator->translate($this->argument('name'))->toReadableName()} already exists.");
             } else {
                 $this->info("Setting up route for '$repositoryName' ...");
-                $routeString = "\n\nRoute::resource('$resourceName', '$namespace\\{$repositoryName}\\{$repositoryName}Controller', [ 'names' => [ "
+                $routeString = "\n\nRoute::resource('$resourceName', '$namespace\\{$namespaceName}\\{$repositoryName}Controller', [ 'names' => [ "
                     ."\n    'index' => '$routeBaseName.index', "
                     ."\n    'create' => '$routeBaseName.create', "
                     ."\n    'store' => '$routeBaseName.store', "
