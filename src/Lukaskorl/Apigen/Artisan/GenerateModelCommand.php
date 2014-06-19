@@ -41,10 +41,11 @@ class GenerateModelCommand extends GeneratorCommand {
         $this->info("Creating model for '{$translatableName->toReadableName()}' ...");
 
         // Render the template
-        $template = $this->generator->compile('model_eloquent_class.txt', [
+        $template = $this->generator->compile("model_{$this->option('database')}_class.txt", [
             'NAMESPACE' => $namespace,
             'CLASSNAME' => $translatableName->toModelName(),
-            'TABLE' => $translatableName->toTableName()
+            'TABLE' => $translatableName->toTableName(),
+            'COLLECTION' => $translatableName->toTableName(),
         ], false);
 
         // Save to filesystem
@@ -74,6 +75,7 @@ class GenerateModelCommand extends GeneratorCommand {
         return array(
             array('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace of the generated model', null),
             array('path', null, InputOption::VALUE_OPTIONAL, 'PSR-0 target path of the generated file', null),
+            array('database', null, InputOption::VALUE_OPTIONAL, 'Defines the database type used (currently mongo and eloquent(=default) are supported)', 'eloquent'),
         );
     }
 

@@ -10,6 +10,7 @@ class #CLASSNAME# extends Transformer {
 
     protected $aliases = [
         // Map attribute names to aliases here
+        '_id' => 'id',          // Automatically map IDs for MongoDB
     ];
 
 }

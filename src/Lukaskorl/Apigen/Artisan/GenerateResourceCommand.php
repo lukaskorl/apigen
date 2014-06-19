@@ -66,7 +66,8 @@ class GenerateResourceCommand extends GeneratorCommand {
         $this->call('apigen:model', [
             'name' => $this->translator->translate($this->argument('name'))->toModelName(),
             '--path' => $path,
-            '--namespace' => $namespace
+            '--namespace' => $namespace,
+            '--database' => $this->option('database')
         ]);
 
         // 3. Generate repository
@@ -138,6 +139,7 @@ class GenerateResourceCommand extends GeneratorCommand {
 
             [ 'namespace', null, InputOption::VALUE_OPTIONAL, 'Base namespace for generated code. You can set a project wide default value fot this in the config.' ],
             [ 'path', null, InputOption::VALUE_OPTIONAL, 'Base path for generated code. You can set a project wide default value fot this in the config.' ],
+            [ 'database', null, InputOption::VALUE_OPTIONAL, 'Defines the database type used (currently mongo and eloquent(=default) are supported)', 'eloquent' ],
         ];
 	}
 
