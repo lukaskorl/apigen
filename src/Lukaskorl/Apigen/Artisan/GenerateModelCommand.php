@@ -41,7 +41,7 @@ class GenerateModelCommand extends GeneratorCommand {
         $this->info("Creating model for '{$translatableName->toReadableName()}' ...");
 
         // Render the template
-        $template = $this->generator->compile('model_class.txt', [
+        $template = $this->generator->compile('model_eloquent_class.txt', [
             'NAMESPACE' => $namespace,
             'CLASSNAME' => $translatableName->toModelName(),
             'TABLE' => $translatableName->toTableName()
