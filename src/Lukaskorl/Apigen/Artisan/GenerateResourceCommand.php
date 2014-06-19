@@ -58,7 +58,7 @@ class GenerateResourceCommand extends GeneratorCommand {
         $path = $this->getPath();
 
         // Prepare schema fields
-        if ( ! $this->option('no-migration')) {
+        if ( (! $this->option('no-migration')) && in_array( $this->option('database'), [ 'eloquent' ]) ) {
             $this->generateSchemaMigration();
         }
 
